@@ -4,8 +4,6 @@ package mix
 import (
 	"time"
 
-	"ezmix/bind/hardware/null"
-	"ezmix/bind/hardware/portaudio"
 	"ezmix/bind/opt"
 	"ezmix/bind/sample"
 	"ezmix/bind/spec"
@@ -17,11 +15,11 @@ func ApiConfigure(s spec.AudioSpec) {
 	sample.ConfigureOutput(s)
 	switch useOutput {
 	case opt.OutputPortAudio:
-		portaudio.ConfigureOutput(s)
+		PortAudioConfigureOutput(s)
 	case opt.OutputWAV:
 		wav.ConfigureOutput(s)
 	case opt.OutputNull:
-		null.ConfigureOutput(s)
+		NullConfigureOutput(s)
 	}
 }
 
@@ -68,7 +66,7 @@ func ApiLoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 func ApiTeardown() {
 	switch useOutput {
 	case opt.OutputPortAudio:
-		portaudio.TeardownOutput()
+		PortAudioTeardownOutput()
 	case opt.OutputWAV:
 		wav.TeardownOutput()
 	case opt.OutputNull:

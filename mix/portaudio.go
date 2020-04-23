@@ -1,5 +1,5 @@
 // Package portaudio is for modular binding of mix to audio interface via PortAudio
-package portaudio
+package mix
 
 import (
 	"github.com/gordonklaus/portaudio"
@@ -10,7 +10,7 @@ import (
 
 var outPortaudioStream *portaudio.Stream
 
-func ConfigureOutput(s spec.AudioSpec) {
+func PortAudioConfigureOutput(s spec.AudioSpec) {
 	var err error
 	outSpec = &s
 	portaudio.Initialize()
@@ -19,7 +19,7 @@ func ConfigureOutput(s spec.AudioSpec) {
 	noErr(outPortaudioStream.Start())
 }
 
-func TeardownOutput() {
+func PortAudioTeardownOutput() {
 	//	noErr(out.Stop())
 	//	noErr(out.Close())
 	portaudio.Terminate()
