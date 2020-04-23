@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-	"ezmix/bind"
 	"ezmix/bind/spec"
 	"ezmix/mix"
 )
@@ -33,10 +32,10 @@ var (
 )
 
 func main() {
-	bind.ApiUseOutputString("portaudio")
+	mix.ApiUseOutputString("portaudio")
 	specs.Validate()
-	bind.ApiSetOutputCallback(mix.NextSample)
-	bind.ApiConfigure(specs)
+	mix.ApiSetOutputCallback(mix.NextSample)
+	mix.ApiConfigure(specs)
 	mix.Configure(specs)
 	mix.SetSoundsPath(prefix)
 

@@ -1,5 +1,5 @@
 // Package bind is for modular binding of mix to audio interface
-package bind
+package mix
 
 import (
 	"time"
