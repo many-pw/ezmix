@@ -13,7 +13,7 @@ import (
 )
 
 // Configure begins streaming to the bound out audio interface, via a callback function
-func Configure(s spec.AudioSpec) {
+func ApiConfigure(s spec.AudioSpec) {
 	sample.ConfigureOutput(s)
 	switch useOutput {
 	case opt.OutputPortAudio:
@@ -25,17 +25,17 @@ func Configure(s spec.AudioSpec) {
 	}
 }
 
-func IsDirectOutput() bool {
+func ApiIsDirectOutput() bool {
 	return useOutput == opt.OutputWAV
 }
 
 // SetMixNextOutFunc to stream mix out from mix
-func SetOutputCallback(fn sample.OutNextCallbackFunc) {
+func ApiSetOutputCallback(fn sample.OutNextCallbackFunc) {
 	sample.SetOutputCallback(fn)
 }
 
 // OutputStart requires a known length
-func OutputStart(length time.Duration) {
+func ApiOutputStart(length time.Duration) {
 	switch useOutput {
 	case opt.OutputWAV:
 		wav.OutputStart(length)
@@ -45,7 +45,7 @@ func OutputStart(length time.Duration) {
 }
 
 // OutputNext using the configured writer.
-func OutputNext(numSamples spec.Tz) {
+func ApiOutputNext(numSamples spec.Tz) {
 	switch useOutput {
 	case opt.OutputWAV:
 		wav.OutputNext(numSamples)
@@ -55,7 +55,7 @@ func OutputNext(numSamples spec.Tz) {
 }
 
 // LoadWAV into a buffer
-func LoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
+func ApiLoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 	switch useLoader {
 	case opt.InputWAV:
 		return wav.Load(file)
@@ -65,7 +65,7 @@ func LoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 }
 
 // Teardown to close all hardware bindings
-func Teardown() {
+func ApiTeardown() {
 	switch useOutput {
 	case opt.OutputPortAudio:
 		portaudio.TeardownOutput()
@@ -77,12 +77,12 @@ func Teardown() {
 }
 
 // UseLoader to select the file loading interface
-func UseLoader(opt opt.Input) {
+func ApiUseLoader(opt opt.Input) {
 	useLoader = opt
 }
 
 // UseLoaderString to select the file loading interface by string
-func UseLoaderString(loader string) {
+func ApiUseLoaderString(loader string) {
 	switch loader {
 	case string(opt.InputWAV):
 		useLoader = opt.InputWAV
@@ -92,12 +92,12 @@ func UseLoaderString(loader string) {
 }
 
 // UseOutput to select the outback interface
-func UseOutput(opt opt.Output) {
+func ApiUseOutput(opt opt.Output) {
 	useOutput = opt
 }
 
 // UseOutputString to select the outback interface by string
-func UseOutputString(output string) {
+func ApiUseOutputString(output string) {
 	switch output {
 	case string(opt.OutputPortAudio):
 		useOutput = opt.OutputPortAudio
@@ -109,10 +109,6 @@ func UseOutputString(output string) {
 		panic("No such Output: " + output)
 	}
 }
-
-/*
- *
- private */
 
 var (
 	useLoader = opt.InputWAV

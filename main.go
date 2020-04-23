@@ -33,10 +33,10 @@ var (
 )
 
 func main() {
-	bind.UseOutputString("portaudio")
+	bind.ApiUseOutputString("portaudio")
 	specs.Validate()
-	bind.SetOutputCallback(mix.NextSample)
-	bind.Configure(specs)
+	bind.ApiSetOutputCallback(mix.NextSample)
+	bind.ApiConfigure(specs)
 	mix.Configure(specs)
 	mix.SetSoundsPath(prefix)
 

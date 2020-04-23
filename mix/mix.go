@@ -113,7 +113,7 @@ func GetCycleDurationTz() spec.Tz {
 
 // OutputStart requires a known length
 func OutputStart(length time.Duration) {
-	bind.OutputStart(length)
+	bind.ApiOutputStart(length)
 }
 
 // OutputContinueTo to  mix and output as []byte via stdout, up to a specified duration-since-start
@@ -121,7 +121,7 @@ func OutputContinueTo(t time.Duration) {
 	deltaDur := t - outputToDur
 	deltaTz := spec.Tz(masterFreq * float64((deltaDur)/time.Second))
 	debug.Printf("mix.OutputContinueTo(%+v) deltaDur:%+v nowTz:%+v deltaTz:%+v begin...", t, deltaDur, nowTz, deltaTz)
-	bind.OutputNext(deltaTz)
+	bind.ApiOutputNext(deltaTz)
 	outputToDur = t
 	debug.Printf("mix.OutputContinueTo(%+v) ...done! nowTz:%+v outputToDur:%+v", t, nowTz, outputToDur)
 }
