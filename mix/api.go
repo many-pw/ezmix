@@ -4,7 +4,6 @@ package mix
 import (
 	"time"
 
-	"ezmix/bind/opt"
 	"ezmix/bind/sample"
 	"ezmix/bind/spec"
 	"ezmix/bind/wav"
@@ -14,17 +13,17 @@ import (
 func ApiConfigure(s spec.AudioSpec) {
 	sample.ConfigureOutput(s)
 	switch useOutput {
-	case opt.OutputPortAudio:
+	case OptOutputPortAudio:
 		PortAudioConfigureOutput(s)
-	case opt.OutputWAV:
+	case OptOutputWAV:
 		wav.ConfigureOutput(s)
-	case opt.OutputNull:
+	case OptOutputNull:
 		NullConfigureOutput(s)
 	}
 }
 
 func ApiIsDirectOutput() bool {
-	return useOutput == opt.OutputWAV
+	return useOutput == OptOutputWAV
 }
 
 // SetMixNextOutFunc to stream mix out from mix
@@ -35,9 +34,9 @@ func ApiSetOutputCallback(fn sample.OutNextCallbackFunc) {
 // OutputStart requires a known length
 func ApiOutputStart(length time.Duration) {
 	switch useOutput {
-	case opt.OutputWAV:
+	case OptOutputWAV:
 		wav.OutputStart(length)
-	case opt.OutputNull:
+	case OptOutputNull:
 		// do nothing
 	}
 }
@@ -45,9 +44,9 @@ func ApiOutputStart(length time.Duration) {
 // OutputNext using the configured writer.
 func ApiOutputNext(numSamples spec.Tz) {
 	switch useOutput {
-	case opt.OutputWAV:
+	case OptOutputWAV:
 		wav.OutputNext(numSamples)
-	case opt.OutputNull:
+	case OptOutputNull:
 		// do nothing
 	}
 }
@@ -55,7 +54,7 @@ func ApiOutputNext(numSamples spec.Tz) {
 // LoadWAV into a buffer
 func ApiLoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 	switch useLoader {
-	case opt.InputWAV:
+	case OptInputWAV:
 		return wav.Load(file)
 	default:
 		return make([]sample.Sample, 0), &spec.AudioSpec{}
@@ -65,50 +64,50 @@ func ApiLoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 // Teardown to close all hardware bindings
 func ApiTeardown() {
 	switch useOutput {
-	case opt.OutputPortAudio:
+	case OptOutputPortAudio:
 		PortAudioTeardownOutput()
-	case opt.OutputWAV:
+	case OptOutputWAV:
 		wav.TeardownOutput()
-	case opt.OutputNull:
+	case OptOutputNull:
 		// do nothing
 	}
 }
 
 // UseLoader to select the file loading interface
-func ApiUseLoader(opt opt.Input) {
+func ApiUseLoader(opt OptInput) {
 	useLoader = opt
 }
 
 // UseLoaderString to select the file loading interface by string
 func ApiUseLoaderString(loader string) {
 	switch loader {
-	case string(opt.InputWAV):
-		useLoader = opt.InputWAV
+	case string(OptInputWAV):
+		useLoader = OptInputWAV
 	default:
 		panic("No such Loader: " + loader)
 	}
 }
 
 // UseOutput to select the outback interface
-func ApiUseOutput(opt opt.Output) {
+func ApiUseOutput(opt OptOutput) {
 	useOutput = opt
 }
 
 // UseOutputString to select the outback interface by string
 func ApiUseOutputString(output string) {
 	switch output {
-	case string(opt.OutputPortAudio):
-		useOutput = opt.OutputPortAudio
-	case string(opt.OutputWAV):
-		useOutput = opt.OutputWAV
-	case string(opt.OutputNull):
-		useOutput = opt.OutputNull
+	case string(OptOutputPortAudio):
+		useOutput = OptOutputPortAudio
+	case string(OptOutputWAV):
+		useOutput = OptOutputWAV
+	case string(OptOutputNull):
+		useOutput = OptOutputNull
 	default:
 		panic("No such Output: " + output)
 	}
 }
 
 var (
-	useLoader = opt.InputWAV
-	useOutput = opt.OutputPortAudio
+	useLoader = OptInputWAV
+	useOutput = OptOutputPortAudio
 )

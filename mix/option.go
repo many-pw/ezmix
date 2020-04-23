@@ -1,20 +1,20 @@
 // Package opt specifies valid options
-package opt
+package mix
 
 // OptLoader represents an audio input option
-type Input string
+type OptInput string
 
 // OptLoadWav to use Go-Native WAV file I/O
-const InputWAV Input = "wav"
+const OptInputWAV OptInput = "wav"
 
 // OptOutput represents an audio output option
-type Output string
+type OptOutput string
 
 // OptOutputNull for benchmarking/profiling, because those tools are unable to sample to C-go callback tree
-const OutputNull Output = "null"
+const OptOutputNull OptOutput = "null"
 
 // OptOutputPortAudio to use Portaudio for audio output
-const OutputPortAudio Output = "portaudio"
+const OptOutputPortAudio OptOutput = "portaudio"
 
 // OptOutputWAV to use WAV directly for []byte to stdout
-const OutputWAV Output = "wav"
+const OptOutputWAV OptOutput = "wav"
