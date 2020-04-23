@@ -1,3 +1,3 @@
 # EzMix 
 
-port of https://ezmix/tree/v0.0.4
+port of https://github.com/go-mix/mix/tree/v0.0.4
