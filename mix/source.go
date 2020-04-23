@@ -4,7 +4,6 @@ package mix
 import (
 	"math"
 
-	"ezmix/bind/debug"
 	"ezmix/bind/sample"
 	"ezmix/bind/spec"
 )
@@ -96,7 +95,7 @@ func (s *Source) load() {
 	s.sample, s.audioSpec = ApiLoadWAV(s.URL)
 	if s.audioSpec == nil {
 		// TODO: handle errors loading file
-		debug.Printf("could not load WAV %s\n", s.URL)
+		//debug.Printf("could not load WAV %s\n", s.URL)
 	}
 	s.maxTz = spec.Tz(len(s.sample))
 	s.state = READY

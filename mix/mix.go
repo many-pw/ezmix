@@ -7,7 +7,6 @@ import (
 
 	"ezmix/bind/spec"
 
-	"ezmix/bind/debug"
 	"ezmix/bind/sample"
 )
 
@@ -119,10 +118,10 @@ func OutputStart(length time.Duration) {
 func OutputContinueTo(t time.Duration) {
 	deltaDur := t - outputToDur
 	deltaTz := spec.Tz(masterFreq * float64((deltaDur)/time.Second))
-	debug.Printf("mix.OutputContinueTo(%+v) deltaDur:%+v nowTz:%+v deltaTz:%+v begin...", t, deltaDur, nowTz, deltaTz)
+	//debug.Printf("mix.OutputContinueTo(%+v) deltaDur:%+v nowTz:%+v deltaTz:%+v begin...", t, deltaDur, nowTz, deltaTz)
 	ApiOutputNext(deltaTz)
 	outputToDur = t
-	debug.Printf("mix.OutputContinueTo(%+v) ...done! nowTz:%+v outputToDur:%+v", t, nowTz, outputToDur)
+	//debug.Printf("mix.OutputContinueTo(%+v) ...done! nowTz:%+v outputToDur:%+v", t, nowTz, outputToDur)
 }
 
 // OutputBegin to output WAV closer as []byte via stdout
@@ -204,9 +203,9 @@ func mixCycle() {
 	mixLiveFires = keepLiveFires
 	SourcePrune(keepSource)
 	nextCycleTz = nowTz + masterCycleDurTz
-	if debug.Active() && SourceCount() > 0 {
-		debug.Printf("mix [%dz] fire-ready:%d fire-active:%d sources:%d\n", nowTz, len(mixReadyFires), len(mixLiveFires), SourceCount())
-	}
+	//if debug.Active() && SourceCount() > 0 {
+	//debug.Printf("mix [%dz] fire-ready:%d fire-active:%d sources:%d\n", nowTz, len(mixReadyFires), len(mixLiveFires), SourceCount())
+	//}
 }
 
 func mixLogarithmicRangeCompression(i sample.Value) sample.Value {
