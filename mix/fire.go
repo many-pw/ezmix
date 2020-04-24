@@ -1,12 +1,8 @@
 // Package fire model an audio source playing at a specific time
 package mix
 
-import (
-	"ezmix/bind/spec"
-)
-
 // New Fire to represent a single audio source playing at a specific time in the future.
-func FireNew(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan float64) *Fire {
+func FireNew(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
 	// debug.Printf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
 		/* setup */
@@ -24,18 +20,18 @@ func FireNew(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan 
 // Fire represents a single audio source playing at a specific time in the future.
 type Fire struct {
 	/* setup */
-	BeginTz spec.Tz
-	EndTz   spec.Tz
+	BeginTz Tz
+	EndTz   Tz
 	Source  string
 	Volume  float64 // 0 to 1
 	Pan     float64 // -1 to +1
 	/* playback */
-	nowTz spec.Tz
+	nowTz Tz
 	state fireStateEnum
 }
 
 // At the series of Tz it's playing for, return the series of Tz corresponding to source audio.
-func (f *Fire) FireAt(at spec.Tz) (t spec.Tz) {
+func (f *Fire) FireAt(at Tz) (t Tz) {
 	//	debug.Printf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
 	switch f.state {
 	case fireStateReady:
@@ -87,6 +83,6 @@ const (
 	fireStateDone fireStateEnum = 6
 )
 
-func (f *Fire) sourceLength() spec.Tz {
+func (f *Fire) sourceLength() Tz {
 	return GetLength(f.Source)
 }

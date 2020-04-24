@@ -1,16 +1,12 @@
-// Package portaudio is for modular binding of mix to audio interface via PortAudio
 package mix
 
 import (
 	"github.com/gordonklaus/portaudio"
-
-	"ezmix/bind/sample"
-	"ezmix/bind/spec"
 )
 
 var outPortaudioStream *portaudio.Stream
 
-func PortAudioConfigureOutput(s spec.AudioSpec) {
+func PortAudioConfigureOutput(s AudioSpec) {
 	var err error
 	outSpec = &s
 	portaudio.Initialize()
@@ -25,18 +21,14 @@ func PortAudioTeardownOutput() {
 	portaudio.Terminate()
 }
 
-/*
- *
- private */
-
 var (
-	outSpec *spec.AudioSpec
+	outSpec *AudioSpec
 )
 
 func outPortaudioStreamCallback(out [][]float32) {
-	var smp []sample.Value
+	var smp []Value
 	for s := range out[0] {
-		smp = sample.OutNext()
+		smp = SampleOutNext()
 		for c := 0; c < outSpec.Channels; c++ {
 			out[c][s] = float32(smp[c])
 		}

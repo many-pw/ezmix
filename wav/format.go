@@ -2,7 +2,7 @@
 package wav
 
 import (
-	"ezmix/bind/spec"
+	"ezmix/mix"
 	"io"
 )
 
@@ -19,28 +19,28 @@ type Format struct {
 	BitsPerSample uint16
 }
 
-func FormatFromSpec(s *spec.AudioSpec) Format {
+func FormatFromSpec(s *mix.AudioSpec) Format {
 	format := Format{}
 	switch s.Format {
-	case spec.AudioU8:
+	case mix.AudioU8:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 8
-	case spec.AudioS8:
+	case mix.AudioS8:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 8
-	case spec.AudioU16:
+	case mix.AudioU16:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 16
-	case spec.AudioS16:
+	case mix.AudioS16:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 16
-	case spec.AudioS32:
+	case mix.AudioS32:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 32
-	case spec.AudioF32:
+	case mix.AudioF32:
 		format.SampleFormat = AudioFormatIEEEFloat
 		format.BitsPerSample = 32
-	case spec.AudioF64:
+	case mix.AudioF64:
 		format.SampleFormat = AudioFormatIEEEFloat
 		format.BitsPerSample = 64
 	}

@@ -1,17 +1,14 @@
-// Package bind is for modular binding of mix to audio interface
 package mix
 
 import (
 	"time"
 
-	"ezmix/bind/sample"
-	"ezmix/bind/spec"
-	"ezmix/bind/wav"
+	"ezmix/wav"
 )
 
 // Configure begins streaming to the bound out audio interface, via a callback function
-func ApiConfigure(s spec.AudioSpec) {
-	sample.ConfigureOutput(s)
+func ApiConfigure(s AudioSpec) {
+	SampleConfigureOutput(s)
 	switch useOutput {
 	case OptOutputPortAudio:
 		PortAudioConfigureOutput(s)
@@ -27,8 +24,8 @@ func ApiIsDirectOutput() bool {
 }
 
 // SetMixNextOutFunc to stream mix out from mix
-func ApiSetOutputCallback(fn sample.OutNextCallbackFunc) {
-	sample.SetOutputCallback(fn)
+func ApiSetOutputCallback(fn SampleOutNextCallbackFunc) {
+	SampleSetOutputCallback(fn)
 }
 
 // OutputStart requires a known length
@@ -42,7 +39,7 @@ func ApiOutputStart(length time.Duration) {
 }
 
 // OutputNext using the configured writer.
-func ApiOutputNext(numSamples spec.Tz) {
+func ApiOutputNext(numSamples Tz) {
 	switch useOutput {
 	case OptOutputWAV:
 		wav.OutputNext(numSamples)
@@ -52,16 +49,15 @@ func ApiOutputNext(numSamples spec.Tz) {
 }
 
 // LoadWAV into a buffer
-func ApiLoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
+func ApiLoadWAV(file string) ([]Sample, *AudioSpec) {
 	switch useLoader {
 	case OptInputWAV:
 		return wav.Load(file)
 	default:
-		return make([]sample.Sample, 0), &spec.AudioSpec{}
+		return make([]Sample, 0), &AudioSpec{}
 	}
 }
 
-// Teardown to close all hardware bindings
 func ApiTeardown() {
 	switch useOutput {
 	case OptOutputPortAudio:

@@ -1,5 +1,5 @@
 // Package spec specifies valid audio formats
-package spec
+package mix
 
 import (
 	"time"
@@ -13,7 +13,7 @@ type AudioSpec struct {
 	Freq     float64
 	Format   AudioFormat
 	Channels int
-	Length time.Duration
+	Length   time.Duration
 }
 
 // Validate these specs

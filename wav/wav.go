@@ -5,12 +5,11 @@ import (
 	"io"
 	"os"
 
-	"ezmix/bind/sample"
-	"ezmix/bind/spec"
+	"ezmix/mix"
 )
 
 // Load a WAV file into memory
-func Load(path string) (out []sample.Sample, specs *spec.AudioSpec) {
+func Load(path string) (out []mix.Sample, specs *mix.AudioSpec) {
 	//	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
 	// return data, sdl2Unspec(sdlSpec)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -21,7 +20,7 @@ func Load(path string) (out []sample.Sample, specs *spec.AudioSpec) {
 	if err != nil {
 		panic(err)
 	}
-	specs = &spec.AudioSpec{
+	specs = &mix.AudioSpec{
 		Freq:     float64(reader.Format.SampleRate),
 		Format:   reader.AudioFormat,
 		Channels: int(reader.Format.NumChannels),

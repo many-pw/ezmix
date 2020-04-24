@@ -8,13 +8,12 @@ import (
 
 	riff "github.com/youpy/go-riff"
 
-	"ezmix/bind/sample"
-	"ezmix/bind/spec"
+	"ezmix/mix"
 	"os"
 	"time"
 )
 
-func ConfigureOutput(s spec.AudioSpec) {
+func ConfigureOutput(s mix.AudioSpec) {
 	outputSpec = &s
 }
 
@@ -45,9 +44,9 @@ func NewWriter(w io.Writer, format Format, length time.Duration) (writer *Writer
 	return writer
 }
 
-func OutputNext(numSamples spec.Tz) (err error) {
-	for n := spec.Tz(0); n < numSamples; n++ {
-		writer.Write(sample.OutNextBytes())
+func OutputNext(numSamples mix.Tz) (err error) {
+	for n := mix.Tz(0); n < numSamples; n++ {
+		writer.Write(mix.OutNextBytes())
 	}
 	return
 }
@@ -59,5 +58,5 @@ func OutputNext(numSamples spec.Tz) (err error) {
 var (
 	stdout     = os.NewFile(uintptr(syscall.Stdout), "/dev/stdout")
 	writer     *Writer
-	outputSpec *spec.AudioSpec
+	outputSpec *mix.AudioSpec
 )

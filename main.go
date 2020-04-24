@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-	"ezmix/bind/spec"
 	"ezmix/mix"
 )
 
@@ -14,9 +13,9 @@ var (
 	out         string
 	profileMode string
 	sampleHz    = float64(48000)
-	specs       = spec.AudioSpec{
+	specs       = mix.AudioSpec{
 		Freq:     sampleHz,
-		Format:   spec.AudioF32,
+		Format:   mix.AudioF32,
 		Channels: 2,
 	}
 	bpm     = 20

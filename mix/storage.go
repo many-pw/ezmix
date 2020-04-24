@@ -2,7 +2,6 @@
 package mix
 
 import (
-	"ezmix/bind/spec"
 	"sync"
 )
 
@@ -26,12 +25,12 @@ func SourceGet(src string) *Source {
 	}
 }
 
-func GetLength(src string) spec.Tz {
+func GetLength(src string) Tz {
 	source := SourceGet(src)
 	if source != nil {
 		return source.Length()
 	} else {
-		return spec.Tz(0)
+		return Tz(0)
 	}
 }
 

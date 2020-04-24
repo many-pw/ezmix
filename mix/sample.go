@@ -1,12 +1,29 @@
-// Package sample models an audio sample
-package sample
+package mix
 
 import (
 	"encoding/binary"
 	"math"
 )
 
+var sampleOutSpec *AudioSpec
+var sampleOutNextCallback SampleOutNextCallbackFunc
+
 type Value float64
+type Sample struct {
+	Values []Value
+}
+
+type SampleOutNextCallbackFunc func() []Value
+
+func SampleConfigureOutput(s AudioSpec) {
+	sampleOutSpec = &s
+}
+
+func SampleNew(values []Value) Sample {
+	return Sample{
+		Values: values,
+	}
+}
 
 func (this Value) Abs() Value {
 	return Value(math.Abs(float64(this)))
@@ -82,38 +99,49 @@ func ValueOfBytesU16LSB(sample []byte) Value {
 	return Value(binary.LittleEndian.Uint16(sample))/Value(0x8000) - Value(1)
 }
 
-//func ValueOfBytesU16MSB(sample []byte) Value {
-//	return Value(binary.BigEndian.Uint16(sample))/Value(0x8000) - Value(1)
-//}
-
 func ValueOfBytesS16LSB(sample []byte) Value {
 	return Value(int16(binary.LittleEndian.Uint16(sample))) / Value(0x7FFF)
 }
-
-//func ValueOfBytesS16MSB(sample []byte) Value {
-//	return Value(int16(binary.BigEndian.Uint16(sample))) / Value(0x7FFF)
-//}
 
 func ValueOfBytesS32LSB(sample []byte) Value {
 	return Value(int32(binary.LittleEndian.Uint32(sample))) / Value(0x7FFFFFFF)
 }
 
-//func ValueOfBytesS32MSB(sample []byte) Value {
-//	return Value(int32(binary.BigEndian.Uint32(sample))) / Value(0x7FFFFFFF)
-//}
-
 func ValueOfBytesF32LSB(sample []byte) Value {
 	return Value(math.Float32frombits(binary.LittleEndian.Uint32(sample)))
 }
-
-//func ValueOfBytesF32MSB(sample []byte) Value {
-//	return Value(math.Float32frombits(binary.BigEndian.Uint32(sample)))
-//}
 
 func ValueOfBytesF64LSB(sample []byte) Value {
 	return Value(math.Float64frombits(binary.LittleEndian.Uint64(sample)))
 }
 
-//func ValueOfBytesF64MSB(sample []byte) Value {
-//	return Value(math.Float64frombits(binary.BigEndian.Uint64(sample)))
-//}
+func SampleSetOutputCallback(fn SampleOutNextCallbackFunc) {
+	sampleOutNextCallback = fn
+}
+
+func SampleOutNext() []Value {
+	return sampleOutNextCallback()
+}
+
+func SampleOutNextBytes() (out []byte) {
+	in := sampleOutNextCallback()
+	for ch := 0; ch < sampleOutSpec.Channels; ch++ {
+		switch sampleOutSpec.Format {
+		case AudioU8:
+			out = append(out, in[ch].ToByteU8())
+		case AudioS8:
+			out = append(out, in[ch].ToByteS8())
+		case AudioS16:
+			out = append(out, in[ch].ToBytesS16LSB()...)
+		case AudioU16:
+			out = append(out, in[ch].ToBytesU16LSB()...)
+		case AudioS32:
+			out = append(out, in[ch].ToBytesS32LSB()...)
+		case AudioF32:
+			out = append(out, in[ch].ToBytesF32LSB()...)
+		case AudioF64:
+			out = append(out, in[ch].ToBytesF64LSB()...)
+		}
+	}
+	return
+}
