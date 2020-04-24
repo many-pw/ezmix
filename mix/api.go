@@ -3,7 +3,7 @@ package mix
 import (
 	"time"
 
-	"ezmix/wav"
+	"gopkg.in/mix.v0/bind/wav"
 )
 
 // Configure begins streaming to the bound out audio interface, via a callback function
@@ -13,7 +13,7 @@ func ApiConfigure(s AudioSpec) {
 	case OptOutputPortAudio:
 		PortAudioConfigureOutput(s)
 	case OptOutputWAV:
-		wav.ConfigureOutput(s)
+		WavConfigureOutput(s)
 	case OptOutputNull:
 		NullConfigureOutput(s)
 	}
@@ -42,7 +42,7 @@ func ApiOutputStart(length time.Duration) {
 func ApiOutputNext(numSamples Tz) {
 	switch useOutput {
 	case OptOutputWAV:
-		wav.OutputNext(numSamples)
+		//WavOutputNext(numSamples)
 	case OptOutputNull:
 		// do nothing
 	}
@@ -52,7 +52,7 @@ func ApiOutputNext(numSamples Tz) {
 func ApiLoadWAV(file string) ([]Sample, *AudioSpec) {
 	switch useLoader {
 	case OptInputWAV:
-		return wav.Load(file)
+		return WavLoad(file)
 	default:
 		return make([]Sample, 0), &AudioSpec{}
 	}

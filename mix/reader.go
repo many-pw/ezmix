@@ -1,5 +1,4 @@
-// Package wav is direct WAV filo I/O
-package wav
+package mix
 
 import (
 	"bufio"
@@ -8,13 +7,12 @@ import (
 
 	riff "github.com/youpy/go-riff"
 
-	"ezmix/mix"
 	"fmt"
 )
 
 type Reader struct {
 	Format      *Format
-	AudioFormat mix.AudioFormat
+	AudioFormat AudioFormat
 	*Data
 	// private
 	riffReader *riff.Reader
@@ -32,7 +30,7 @@ func NewReader(file riff.RIFFReader) (reader *Reader, err error) {
 	return
 }
 
-func (r *Reader) ReadSamples(params ...uint32) (out []mix.Sample, err error) {
+func (r *Reader) ReadSamples(params ...uint32) (out []Sample, err error) {
 	var buffer []byte
 	var numSamples, n int
 
@@ -57,21 +55,17 @@ func (r *Reader) ReadSamples(params ...uint32) (out []mix.Sample, err error) {
 	r.Data.pos += uint32(numSamples * blockAlign)
 
 	for offset := 0; offset < len(buffer)-numChannels-bytesPerSample; offset += blockAlign {
-		values := make([]mix.Value, numChannels)
+		values := make([]Value, numChannels)
 		for c := 0; c < int(numChannels); c++ {
 			offsetCh := offset + c*bytesPerSample
 			bytes := buffer[offsetCh : offsetCh+bytesPerSample]
 			values[c] = r.sampleFromBytes(r.AudioFormat, bytes)
 		}
-		out = append(out, mix.New(values))
+		out = append(out, SampleNew(values))
 	}
 
 	return
 }
-
-/*
- *
- private */
 
 func (r *Reader) readSamplesIntoBuffer(p []byte) (n int, err error) {
 	if r.Data == nil {
@@ -85,29 +79,29 @@ func (r *Reader) readSamplesIntoBuffer(p []byte) (n int, err error) {
 	return r.Data.Read(p)
 }
 
-func (r *Reader) sampleFromBytes(audio mix.AudioFormat, bytes []byte) mix.Value {
+func (r *Reader) sampleFromBytes(audio AudioFormat, bytes []byte) Value {
 	// TODO: big-endian or little-endian?
 	switch audio {
-	case mix.AudioU8:
-		return mix.ValueOfByteU8(bytes[0])
-	case mix.AudioS8:
-		return mix.ValueOfByteS8(bytes[0])
-	case mix.AudioU16:
-		return mix.ValueOfBytesU16LSB(bytes)
-	case mix.AudioS16:
-		return mix.ValueOfBytesS16LSB(bytes)
-	case mix.AudioS32:
-		return mix.ValueOfBytesS32LSB(bytes)
-	case mix.AudioF32:
-		return mix.ValueOfBytesF32LSB(bytes)
-	case mix.AudioF64:
-		return mix.ValueOfBytesF64LSB(bytes)
+	case AudioU8:
+		return ValueOfByteU8(bytes[0])
+	case AudioS8:
+		return ValueOfByteS8(bytes[0])
+	case AudioU16:
+		return ValueOfBytesU16LSB(bytes)
+	case AudioS16:
+		return ValueOfBytesS16LSB(bytes)
+	case AudioS32:
+		return ValueOfBytesS32LSB(bytes)
+	case AudioF32:
+		return ValueOfBytesF32LSB(bytes)
+	case AudioF64:
+		return ValueOfBytesF64LSB(bytes)
 	default:
 		panic("Unhandled format!")
 	}
 }
 
-func (r *Reader) openAndParse() (format *Format, audio mix.AudioFormat, err error) {
+func (r *Reader) openAndParse() (format *Format, audio AudioFormat, err error) {
 	var riffChunk *riff.RIFFChunk
 
 	format = new(Format)
@@ -135,18 +129,18 @@ func (r *Reader) openAndParse() (format *Format, audio mix.AudioFormat, err erro
 			case AudioFormatLinearPCM: // Linear PCM
 				switch format.BitsPerSample {
 				case 8:
-					audio = mix.AudioS8
+					audio = AudioS8
 				case 16:
-					audio = mix.AudioS16
+					audio = AudioS16
 				default:
 					panic(fmt.Sprintf("Unhandled Linear PCM bitrate: %+v", format.BitsPerSample))
 				}
 			case AudioFormatIEEEFloat: // IEEE Float
 				switch format.BitsPerSample {
 				case 32:
-					audio = mix.AudioF32
+					audio = AudioF32
 				case 64:
-					audio = mix.AudioF64
+					audio = AudioF64
 				default:
 					panic(fmt.Sprintf("Unhandled IEEE Float bitrate: %+v", format.BitsPerSample))
 				}

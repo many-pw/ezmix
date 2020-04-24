@@ -1,15 +1,9 @@
-// Package wav is direct WAV filo I/O
-package wav
+package mix
 
 import (
-	"ezmix/mix"
 	"io"
 )
 
-// the Format struct must be in the exact order according
-// to WAV specifications, such that a binary.Read(...)
-// can assign the WAV specified "fmt" header bytes
-// to the correct Format properties.
 type Format struct {
 	SampleFormat  SampleFormat
 	NumChannels   uint16
@@ -19,28 +13,28 @@ type Format struct {
 	BitsPerSample uint16
 }
 
-func FormatFromSpec(s *mix.AudioSpec) Format {
+func FormatFromSpec(s *AudioSpec) Format {
 	format := Format{}
 	switch s.Format {
-	case mix.AudioU8:
+	case AudioU8:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 8
-	case mix.AudioS8:
+	case AudioS8:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 8
-	case mix.AudioU16:
+	case AudioU16:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 16
-	case mix.AudioS16:
+	case AudioS16:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 16
-	case mix.AudioS32:
+	case AudioS32:
 		format.SampleFormat = AudioFormatLinearPCM
 		format.BitsPerSample = 32
-	case mix.AudioF32:
+	case AudioF32:
 		format.SampleFormat = AudioFormatIEEEFloat
 		format.BitsPerSample = 32
-	case mix.AudioF64:
+	case AudioF64:
 		format.SampleFormat = AudioFormatIEEEFloat
 		format.BitsPerSample = 64
 	}

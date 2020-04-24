@@ -1,17 +1,11 @@
-// Package wav is direct WAV filo I/O
-package wav
+package mix
 
 import (
 	"io"
 	"os"
-
-	"ezmix/mix"
 )
 
-// Load a WAV file into memory
-func Load(path string) (out []mix.Sample, specs *mix.AudioSpec) {
-	//	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
-	// return data, sdl2Unspec(sdlSpec)
+func WavLoad(path string) (out []Sample, specs *AudioSpec) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		panic("File not found: " + path)
 	}
@@ -20,7 +14,7 @@ func Load(path string) (out []mix.Sample, specs *mix.AudioSpec) {
 	if err != nil {
 		panic(err)
 	}
-	specs = &mix.AudioSpec{
+	specs = &AudioSpec{
 		Freq:     float64(reader.Format.SampleRate),
 		Format:   reader.AudioFormat,
 		Channels: int(reader.Format.NumChannels),
@@ -34,7 +28,3 @@ func Load(path string) (out []mix.Sample, specs *mix.AudioSpec) {
 	}
 	return
 }
-
-/*
- *
- private */

@@ -10,7 +10,7 @@ func SourcePrepare(src string) {
 	storageMutex.Lock()
 	defer storageMutex.Unlock()
 	if _, exists := storage[src]; !exists {
-		storage[src] = New(src)
+		storage[src] = SourceNew(src)
 	}
 }
 

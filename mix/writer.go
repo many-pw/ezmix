@@ -1,5 +1,4 @@
-// Package wav is direct WAV filo I/O
-package wav
+package mix
 
 import (
 	"encoding/binary"
@@ -8,21 +7,16 @@ import (
 
 	riff "github.com/youpy/go-riff"
 
-	"ezmix/mix"
 	"os"
 	"time"
 )
 
-func ConfigureOutput(s mix.AudioSpec) {
+func WavConfigureOutput(s AudioSpec) {
 	outputSpec = &s
 }
 
-func OutputStart(length time.Duration) {
+func WavOutputStart(length time.Duration) {
 	writer = NewWriter(stdout, FormatFromSpec(outputSpec), length)
-}
-
-func TeardownOutput() {
-	// nothing to do
 }
 
 type Writer struct {
@@ -44,19 +38,15 @@ func NewWriter(w io.Writer, format Format, length time.Duration) (writer *Writer
 	return writer
 }
 
-func OutputNext(numSamples mix.Tz) (err error) {
-	for n := mix.Tz(0); n < numSamples; n++ {
-		writer.Write(mix.OutNextBytes())
+func OutputNext(numSamples Tz) (err error) {
+	for n := Tz(0); n < numSamples; n++ {
+		//writer.Write(wavOutNextBytes())
 	}
 	return
 }
 
-/*
- *
- private */
-
 var (
 	stdout     = os.NewFile(uintptr(syscall.Stdout), "/dev/stdout")
 	writer     *Writer
-	outputSpec *mix.AudioSpec
+	outputSpec *AudioSpec
 )
